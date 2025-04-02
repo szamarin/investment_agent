@@ -1,0 +1,325 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Stock Data API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/web_search": {
+      "get": {
+        "summary": "GET /web_search",
+        "description": "Searches the web using DuckDuckGo and returns the search results",
+        "operationId": "webSearch",
+        "parameters": [
+          {
+            "description": "The search query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Query",
+              "description": "The search query"
+            },
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "description": "Max number of results to return. Default 10",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Max Results",
+              "description": "Max number of results to return. Default 10",
+              "default": 10
+            },
+            "name": "max_results",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Return",
+                  "description": "The search results"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_current_date": {
+      "get": {
+        "summary": "GET /get_current_date",
+        "description": "Returns the current date",
+        "operationId": "getCurrentDate",
+        "responses": {
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Return",
+                  "description": "The current date in YYYY-MM-DD format"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_ticker_data": {
+      "get": {
+        "summary": "GET /get_ticker_data",
+        "description": "Downloads historical stock data from Yahoo Finance and returns it as a dictionary",
+        "operationId": "getTickerData",
+        "parameters": [
+          {
+            "description": "A stock ticker symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ticker",
+              "description": "A stock ticker symbol",
+              "example": "AAPL"
+            },
+            "name": "ticker",
+            "in": "query"
+          },
+          {
+            "description": "The start date for the data in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Start Date",
+              "description": "The start date for the data in YYYY-MM-DD format",
+              "example": "2023-01-01"
+            },
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "description": "The end date for the data in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "End Date",
+              "description": "The end date for the data in YYYY-MM-DD format"
+            },
+            "name": "end_date",
+            "in": "query"
+          },
+          {
+            "description": "The metric to return e.g., (Open, High, Low, Close, Volume)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Metric",
+              "description": "The metric to return e.g., (Open, High, Low, Close, Volume)",
+              "default": "all",
+              "example": "Close"
+            },
+            "name": "metric",
+            "in": "query"
+          },
+          {
+            "description": "The frequency of the data",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Sampling",
+              "description": "The frequency of the data",
+              "default": "monthly",
+              "example": "daily"
+            },
+            "name": "sampling",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Return",
+                  "description": "A dictionary where keys are ticker symbols and values are lists of historical data records"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_fred_data": {
+      "get": {
+        "summary": "GET /get_fred_data",
+        "description": "Downloads data from the Federal Reserve Economic Data (FRED) database and returns it as dictionary",
+        "operationId": "getFredData",
+        "parameters": [
+          {
+            "description": "The FRED series ID e.g., 'GDP'",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Series",
+              "description": "The FRED series ID e.g., 'GDP'",
+              "example": "GDP"
+            },
+            "name": "series",
+            "in": "query"
+          },
+          {
+            "description": "The start date for the data in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Start Date",
+              "description": "The start date for the data in YYYY-MM-DD format",
+              "example": "2023-01-01"
+            },
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "description": "The end date for the data in YYYY-MM-DD format",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "End Date",
+              "description": "The end date for the data in YYYY-MM-DD format"
+            },
+            "name": "end_date",
+            "in": "query"
+          },
+          {
+            "description": "The frequency of the data e.g. daily, weekly, monthly",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Sampling",
+              "description": "The frequency of the data e.g. daily, weekly, monthly",
+              "default": "monthly",
+              "example": "monthly"
+            },
+            "name": "sampling",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Return",
+                  "description": "A list of dictionaries containing 'Date' and the value of the FRED series"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
