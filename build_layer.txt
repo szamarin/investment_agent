@@ -1,0 +1,13 @@
+layer_name="action_handlers/stock_data/layer_content"
+mkdir -p "$layer_name/python/lib/python3.11/site-packages"
+docker run --rm \
+    -v "$(pwd)/$layer_name:/var/task" \
+    -w /var/task \
+    --network sagemaker \
+    --entrypoint /bin/bash \
+    "amazon/aws-lambda-python:3.11.2025.04.02.16-x86_64" \
+    -c "pip3 install -r requirements.txt -t python/lib/python3.11/site-packages/"
+
+zip -r "stock_layer.zip" "$layer_name"
+
+add ssm permissions
